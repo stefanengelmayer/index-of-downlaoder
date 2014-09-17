@@ -8,14 +8,8 @@ using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-
-
-
-
 namespace Downloader
 {
-
-
     class Program
     {
         public static string pfad = ""; //wird durch Config() gesetzt.
@@ -72,7 +66,7 @@ namespace Downloader
                 }
 
             }
-            catch (FileNotFoundException ex) //Wenn es die config_downloader.cfg
+            catch (FileNotFoundException) //Wenn es die config_downloader.cfg
             {
                 Console.WriteLine("\"config_downloader.cfg\" wurde nicht gefunden. Bitte Erstellen mit:\nDownloadpfad:\n[Ihr gewünschter Pfad] z.B. C:\\dl\\");
             }
@@ -86,18 +80,32 @@ namespace Downloader
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Bitte geben Sie die zu durchsuchende URL ein: \n(Qick Edit Modus ist an)");
+
             string url = Console.ReadLine();
+            
             Console.WriteLine("Leerzeichen kodiert als: (zuerst leer lassen, manche Server verwenden ein +)");
             Program.leerzeichen = Console.ReadLine();
-            if (Program.leerzeichen == " ") Console.WriteLine("Leerzeichen als Standard gespeichert.");
-            else Console.WriteLine("Leerzeichen als {0} dargestellt", Program.leerzeichen);
-            Thread.Sleep(700);
+            
+            if (Program.leerzeichen == " ") 
+                Console.WriteLine("Leerzeichen als Standard gespeichert.");
+            else 
+                Console.WriteLine("Leerzeichen als {0} dargestellt", Program.leerzeichen);
+            
+            Thread.Sleep(700); // fancy
+
             Console.WriteLine("Speicherpfad: " + pfad);
-            Thread.Sleep(1000);
+            
+            Thread.Sleep(1000); // fancy
+            
             Console.WriteLine("Speicherpfad erweitern:  (falls kein Über-Ordner gewünscht ist, bitte Enter drücken)");
             Program.Ordner = Console.ReadLine();
-            if (Program.Ordner.EndsWith(@"/")) Program.Ordner = Program.Ordner.TrimEnd('/');
-            if (!Program.Ordner.EndsWith(@"\")) Program.Ordner += @"\";
+            
+            if (Program.Ordner.EndsWith(@"/")) 
+                Program.Ordner = Program.Ordner.TrimEnd('/');
+            
+            if (!Program.Ordner.EndsWith(@"\")) 
+                Program.Ordner += @"\";
+            
             Console.WriteLine("Speicherpfad: " + pfad + Ordner);
             Speicherpfad = pfad + Ordner;
             string dir = "";
@@ -259,8 +267,15 @@ namespace Downloader
 
 
 
-
-        public static string LadeDatei(string url, string datei, string dir, string offlinepfad) // Url=komplett - datei=Datei.Endung - dir=aktuelles Verzeichnis - offlinepfad = aktuelles Verzeichnis
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="url">komplette URL</param>
+        /// <param name="datei">datei=Dateiname.Endung</param>
+        /// <param name="dir">aktuelles Verzeichnis</param>
+        /// <param name="offlinepfad">aktuelles Verzeichnis</param>
+        /// <returns></returns>
+        public static string LadeDatei(string url, string datei, string dir, string offlinepfad)
         {
             string myStringWebResource = null;
             string pfad = Program.Speicherpfad + dir.Replace("/", @"\");
