@@ -192,8 +192,6 @@ namespace Downloader
             {
                 completed = false;
                 sw.Start();
-                //myWebClient.DownloadFile(myStringWebResource, save_path + datei);
-                //Console.Clear();
                 myWebClient.DownloadFileAsync(new Uri(myStringWebResource), save_path + datei);
                 Console.WriteLine("File: {0}", pathToCheck.Replace("%20", " "));
                 top = Console.CursorTop;
@@ -215,7 +213,6 @@ namespace Downloader
 
         void myWebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            
             FileInfo info = new FileInfo(pathToCheck.Replace("%20", " "));
             length = info.Length;
             try
@@ -233,29 +230,12 @@ namespace Downloader
             {
                 speed = speed / 1024;
                 einheit = "KByte/s";
-                
-                // Problem zeigt keine Kommastelle an :)
-                /*if (speed > 1024)
-                {
-                    speed = speed / 1024;
-                    einheit = "MByte/s";
-                }*/
             }
-
-            // Problem flackert bei gleicher Linie -> und jetzt wird der output gespammt!
-            // Empfehlung hier für eine GUI :P
             
-           
-            
-            
-            int total = (int)e.TotalBytesToReceive;
-            int aktuell = (int)e.BytesReceived;
+            long total = e.TotalBytesToReceive;
+            long aktuell = e.BytesReceived;
             int progress = e.ProgressPercentage;
-            statusstring = ("File Size: "+total + "Bytes received: " + aktuell + " Progress: "+ progress +"%, Speed: "+speed + " "+ einheit ); 
-            
-
-
-
+            statusstring = "File Size: " + total + " Bytes received: " + aktuell + " Progress: " + progress + "%, Speed: "+ speed + " " + einheit; 
         }
 
         void myWebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -268,7 +248,6 @@ namespace Downloader
             Console.WriteLine();
             Console.WriteLine();
             Console.SetCursorPosition(1, top);
-
             Console.WriteLine("Download fertig! - Mache weiter!");
         }
 
