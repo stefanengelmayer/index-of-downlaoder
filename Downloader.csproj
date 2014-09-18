@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Funktionen.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Downloader.cs" />
     <Compile Include="GetFilesFromHTTP.cs" />

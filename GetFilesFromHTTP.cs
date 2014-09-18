@@ -200,8 +200,8 @@ namespace Downloader
                 {
                     Thread.Sleep(200);
                     Console.SetCursorPosition(0, top);
-                    Console.WriteLine("                                                                                                                                      ");
-                    Console.WriteLine("                                                                                                                                      ");             
+                    Funktionen.Lösche_Zeile();
+                    Funktionen.Lösche_Zeile();      
                     Console.SetCursorPosition(0, top);
                     Console.WriteLine(statusstring);
 
@@ -288,9 +288,9 @@ namespace Downloader
             sw.Stop();
             sw.Reset();
             Console.SetCursorPosition(1, top);
-            Console.WriteLine("                                                                                                                                      ");
-            Console.WriteLine("                                                                                                                                      ");
-            Console.WriteLine("                                                                                                                                      "); 
+            Funktionen.Lösche_Zeile();
+            Funktionen.Lösche_Zeile();
+            Funktionen.Lösche_Zeile();
             Console.SetCursorPosition(1, top);
             Console.WriteLine("Download fertig! - Mache weiter!");
         }
