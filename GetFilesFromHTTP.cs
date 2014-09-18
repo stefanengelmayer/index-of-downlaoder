@@ -6,6 +6,7 @@ using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Downloader
 {
@@ -14,6 +15,13 @@ namespace Downloader
         private Downloader downloader;
         private HttpWebResponse response;
         private StreamReader reader;
+
+        // async download variablen
+        bool completed = false;
+        long length;
+        long speed;
+        string pathToCheck = String.Empty;
+        Stopwatch sw = new Stopwatch();
 
         public GetFilesFromHTTP(Downloader downloader)
         {
@@ -159,6 +167,10 @@ namespace Downloader
             }
 
             WebClient myWebClient = new WebClient();
+            myWebClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(myWebClient_DownloadFileCompleted);
+            myWebClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(myWebClient_DownloadProgressChanged);
+            // to check for the file in the callback handler
+            pathToCheck = save_path + datei;
 
             if (File.Exists(save_path + datei.Replace("%20", " "))) 
             { 
@@ -172,7 +184,16 @@ namespace Downloader
             datei = datei.Replace("%20", " ");
             try
             {
-                myWebClient.DownloadFile(myStringWebResource, save_path + datei);
+                completed = false;
+                sw.Start();
+                //myWebClient.DownloadFile(myStringWebResource, save_path + datei);
+                Console.Clear();
+                myWebClient.DownloadFileAsync(new Uri(myStringWebResource), save_path + datei);
+
+                while (!completed)
+                {
+                    // just to stop the worker from parallel downloads
+                }
             }
             catch (WebException e)
             {
@@ -181,6 +202,50 @@ namespace Downloader
             Console.ForegroundColor = ConsoleColor.Red;
             return ("\nDownload der Datei abgeschlossen, gespeichert in:  " + pfad);
 
+        }
+
+        void myWebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            FileInfo info = new FileInfo(pathToCheck.Replace("%20", " "));
+            length = info.Length;
+            try
+            {
+                speed = length / (sw.ElapsedMilliseconds / 1000);
+            }
+            catch (DivideByZeroException)
+            {
+                speed = 0;
+            }
+
+            string einheit = "Byte/s";
+
+            if (speed > 1024)
+            {
+                speed = speed / 1024;
+                einheit = "KByte/s";
+                
+                // Problem zeigt keine Kommastelle an :)
+                /*if (speed > 1024)
+                {
+                    speed = speed / 1024;
+                    einheit = "MByte/s";
+                }*/
+            }
+
+            // Problem flackert bei gleicher Linie -> und jetzt wird der output gespammt!
+            // Empfehlung hier für eine GUI :P
+            Console.WriteLine("File: {0}", pathToCheck.Replace("%20", " "));
+            Console.WriteLine("File Size: {0}, Bytes received: {1}, Progress: {4}, Speed: {2} {3}", 
+                e.TotalBytesToReceive, e.BytesReceived, speed, einheit, e.ProgressPercentage);
+        }
+
+        void myWebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            completed = true;
+            sw.Stop();
+            sw.Reset();
+
+            Console.WriteLine("Download fertig! - Mache weiter!");
         }
 
         public string GetDirectoryListingRegexForUrl(string url)
