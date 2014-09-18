@@ -195,12 +195,17 @@ namespace Downloader
                 myWebClient.DownloadFileAsync(new Uri(myStringWebResource), save_path + datei);
                 Console.WriteLine("File: {0}", pathToCheck.Replace("%20", " "));
                 top = Console.CursorTop;
+                Console.CursorVisible = false;
                 while (!completed)
                 {
+                    Console.SetCursorPosition(0, top);
+                    Console.WriteLine("");
+                    Console.WriteLine("");
                     Console.SetCursorPosition(0, top);
                     Console.WriteLine(statusstring);
 
                 }
+                Console.CursorVisible = true;
             }
             catch (WebException e)
             {
