@@ -199,8 +199,8 @@ namespace Downloader
                 while (!completed)
                 {
                     Thread.Sleep(200);
-                    Console.SetCursorPosition(0, top);
-                    Funktionen.Lösche_Zeile();
+                    Console.SetCursorPosition(0, top);                   
+                    Funktionen.Lösche_Zeile();              // Console.BufferHeight (ca. 300) den Fall beachten... 
                     Funktionen.Lösche_Zeile();      
                     Console.SetCursorPosition(0, top);
                     Console.WriteLine(statusstring);
