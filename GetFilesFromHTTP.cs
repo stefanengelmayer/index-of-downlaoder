@@ -16,6 +16,10 @@ namespace Downloader
         private HttpWebResponse response;
         private StreamReader reader;
 
+        //für die Stats während des Downloads 
+        private int top;
+        string statusstring; 
+
         // async download variablen
         bool completed = false;
         long length;
@@ -182,17 +186,22 @@ namespace Downloader
             Console.WriteLine("Lade  {0}  runter  ....", datei.Replace("%20", " "));
             Console.ForegroundColor = ConsoleColor.White;
             datei = datei.Replace("%20", " ");
+            
+
             try
             {
                 completed = false;
                 sw.Start();
                 //myWebClient.DownloadFile(myStringWebResource, save_path + datei);
-                Console.Clear();
+                //Console.Clear();
                 myWebClient.DownloadFileAsync(new Uri(myStringWebResource), save_path + datei);
-
+                Console.WriteLine("File: {0}", pathToCheck.Replace("%20", " "));
+                top = Console.CursorTop;
                 while (!completed)
                 {
-                    // just to stop the worker from parallel downloads
+                    Console.SetCursorPosition(0, top);
+                    Console.WriteLine(statusstring);
+
                 }
             }
             catch (WebException e)
@@ -206,6 +215,7 @@ namespace Downloader
 
         void myWebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
+            
             FileInfo info = new FileInfo(pathToCheck.Replace("%20", " "));
             length = info.Length;
             try
@@ -234,9 +244,18 @@ namespace Downloader
 
             // Problem flackert bei gleicher Linie -> und jetzt wird der output gespammt!
             // Empfehlung hier für eine GUI :P
-            Console.WriteLine("File: {0}", pathToCheck.Replace("%20", " "));
-            Console.WriteLine("File Size: {0}, Bytes received: {1}, Progress: {4}%, Speed: {2} {3}", 
-                e.TotalBytesToReceive, e.BytesReceived, speed, einheit, e.ProgressPercentage);
+            
+           
+            
+            
+            int total = (int)e.TotalBytesToReceive;
+            int aktuell = (int)e.BytesReceived;
+            int progress = e.ProgressPercentage;
+            statusstring = ("File Size: "+total + "Bytes received: " + aktuell + " Progress: "+ progress +"%, Speed: "+speed + " "+ einheit ); 
+            
+
+
+
         }
 
         void myWebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -244,6 +263,11 @@ namespace Downloader
             completed = true;
             sw.Stop();
             sw.Reset();
+            Console.SetCursorPosition(1, top);
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.SetCursorPosition(1, top);
 
             Console.WriteLine("Download fertig! - Mache weiter!");
         }
