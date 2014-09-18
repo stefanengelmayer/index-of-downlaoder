@@ -12,5 +12,13 @@ namespace Downloader
         {
             Console.WriteLine("                                                                                                                                                                               ");
         }
+
+        public static void Zeile_Farbig(string text, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = Config.standard;
+        }
+
     }
 }

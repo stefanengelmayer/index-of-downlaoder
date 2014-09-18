@@ -11,6 +11,8 @@ namespace Downloader
         private string configPath = Environment.CurrentDirectory; // ausführpfad
         private ConfigType type;
 
+        public static ConsoleColor standard = ConsoleColor.White;
+
         public Config(ConfigType type)
         {
             this.type = type;
