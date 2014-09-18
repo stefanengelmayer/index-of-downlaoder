@@ -238,9 +238,47 @@ namespace Downloader
             }
             
             long total = e.TotalBytesToReceive;
+            string totalbyte = "Bytes";
+            if (total > 1024)
+            {
+                total = total / 1024;
+                totalbyte = "KBytes";
+
+                if (total > 1024)
+                {
+                    total = total / 1024;
+                    totalbyte = "MBytes";
+
+                    if (total > 1024)
+                    {
+                        total = total / 1024;
+                        totalbyte = "GBytes";
+                    }
+                }
+            }
+
             long aktuell = e.BytesReceived;
+            string aktuellEinheit = "Bytes";
+
+            if (aktuell > 1024)
+            {
+                aktuell = aktuell / 1024;
+                aktuellEinheit = "KBytes";
+
+                if (aktuell > 1024)
+                {
+                    aktuell = aktuell / 1024;
+                    aktuellEinheit = "MBytes";
+
+                    if (aktuell > 1024)
+                    {
+                        aktuell = aktuell / 1024;
+                        aktuellEinheit = "GBytes";
+                    }
+                }
+            }
             int progress = e.ProgressPercentage;
-            statusstring = "File Size: " + total + " Bytes received: " + aktuell + " Progress: " + progress + "%, Speed: "+ speed + " " + einheit; 
+            statusstring = "File Size: " + total + " " + totalbyte + " received: " + aktuell + " " + aktuellEinheit + " Progress: " + progress + "%, Speed: "+ speed + " " + einheit; 
         }
 
         void myWebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
