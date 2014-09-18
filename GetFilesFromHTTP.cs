@@ -198,6 +198,7 @@ namespace Downloader
                 Console.CursorVisible = false;
                 while (!completed)
                 {
+                    Thread.Sleep(200);
                     Console.SetCursorPosition(0, top);
                     Console.WriteLine("");
                     Console.WriteLine("");
