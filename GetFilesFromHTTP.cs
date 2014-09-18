@@ -235,7 +235,7 @@ namespace Downloader
             // Problem flackert bei gleicher Linie -> und jetzt wird der output gespammt!
             // Empfehlung hier für eine GUI :P
             Console.WriteLine("File: {0}", pathToCheck.Replace("%20", " "));
-            Console.WriteLine("File Size: {0}, Bytes received: {1}, Progress: {4}, Speed: {2} {3}", 
+            Console.WriteLine("File Size: {0}, Bytes received: {1}, Progress: {4}%, Speed: {2} {3}", 
                 e.TotalBytesToReceive, e.BytesReceived, speed, einheit, e.ProgressPercentage);
         }
 
