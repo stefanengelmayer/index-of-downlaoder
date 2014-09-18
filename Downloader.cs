@@ -13,7 +13,7 @@ namespace Downloader
 
 
         // Download Variablen
-        private string pfad = ""; //wird durch Config() gesetzt.
+        private string pfad = "";
         private string leerzeichen = " ";
         private string Ordner = null;
         private string Speicherpfad = null;

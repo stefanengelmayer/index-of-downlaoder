@@ -38,7 +38,6 @@ namespace Downloader
         {
             EnableQuickEditMode();
             new Downloader();
-            // Ich bin ein Kommentar :) 
         }
     }
 }
