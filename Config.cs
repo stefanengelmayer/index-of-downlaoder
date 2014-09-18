@@ -23,7 +23,7 @@ namespace Downloader
                 if (type == ConfigType.DownloadConfig)
                 {
                     string path = configPath + "\\config_downloader.cfg";
-                    int line = (int)ConfigType.DownloadConfig;
+                    int line = (int)type;
                     string[] content = File.ReadAllLines(path);
 
                     // clean up
@@ -47,17 +47,19 @@ namespace Downloader
 
         public bool CorrectMediaType(string tmp)
         {
+            type = ConfigType.MediaTypesConfig;
             try
             {
                 // eingabe wie folgt: mp3;mp4;wav;
-                string path = configPath + "\\config_mediafiles.cfg";
-                string files = File.ReadAllText(path);
+                string path = configPath + "\\config_downloader.cfg";
+                int line = (int)type;
+                string[] content = File.ReadAllLines(path);
 
                 string[] tmp_ending = tmp.Split('.');
                 string ending = "." + tmp_ending[tmp_ending.Length - 1];
                 ending = ending.Replace("\"", "");
 
-                if (files.Contains(ending))
+                if (content[line].Contains(ending))
                     return true;
                 else
                     return false;
@@ -78,6 +80,6 @@ namespace Downloader
 
     public enum ConfigType
     {
-        DownloadConfig
+        DownloadConfig, MediaTypesConfig
     }
 }
