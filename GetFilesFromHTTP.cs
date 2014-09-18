@@ -207,6 +207,7 @@ namespace Downloader
 
                 }
                 Console.CursorVisible = true;
+               Console.WriteLine( "[ 100% ] Download Complete!"); 
             }
             catch (WebException e)
             {
@@ -279,7 +280,7 @@ namespace Downloader
                 }
             }
             int progress = e.ProgressPercentage;
-            statusstring = "File Size: " + total + " " + totalbyte + " received: " + aktuell + " " + aktuellEinheit + " Progress: " + progress + "%, Speed: "+ speed + " " + einheit; 
+            statusstring = "[ " + progress +"% ]File Size: " + total + " " + totalbyte + " received: " + aktuell + " " + aktuellEinheit + " Speed: "+ speed + einheit; 
         }
 
         void myWebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
