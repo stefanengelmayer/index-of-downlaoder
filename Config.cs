@@ -56,7 +56,7 @@ namespace Downloader
                 string[] content = File.ReadAllLines(path);
 
                 string[] tmp_ending = tmp.Split('.');
-                string ending = "." + tmp_ending[tmp_ending.Length - 1];
+                string ending =  tmp_ending[tmp_ending.Length - 1];
                 ending = ending.Replace("\"", "");
 
                 if (content[line].Contains(ending))
