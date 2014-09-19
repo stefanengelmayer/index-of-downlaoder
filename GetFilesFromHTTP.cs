@@ -196,6 +196,7 @@ namespace Downloader
                 Console.WriteLine("File: {0}", pathToCheck.Replace("%20", " "));
                 top = Console.CursorTop;
                 Console.CursorVisible = false;
+
                 while (!completed)
                 {
                     Thread.Sleep(200);
@@ -206,8 +207,8 @@ namespace Downloader
                     Console.WriteLine(statusstring);
 
                 }
-                Console.CursorVisible = true;
-               Console.WriteLine( "[ 100% ] Download Complete!"); 
+
+                Console.CursorVisible = true; 
             }
             catch (WebException e)
             {
@@ -280,7 +281,7 @@ namespace Downloader
                 }
             }
             int progress = e.ProgressPercentage;
-            statusstring = "[ " + progress +"% ]File Size: " + total + " " + totalbyte + " received: " + aktuell + " " + aktuellEinheit + " Speed: "+ speed + einheit; 
+            statusstring = "[ " + progress +"% ] File Size: " + total + " " + totalbyte + " received: " + aktuell + " " + aktuellEinheit + " Speed: "+ speed + einheit; 
         }
 
         void myWebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -293,7 +294,7 @@ namespace Downloader
             Funktionen.Lösche_Zeile();
             Funktionen.Lösche_Zeile();
             Console.SetCursorPosition(1, top);
-            Console.WriteLine("Download fertig! - Mache weiter!");
+            Console.WriteLine("[ 100% ] Download Complete!"); // hier besser aufgehoben da es ein Callback ist
         }
 
         public string GetDirectoryListingRegexForUrl(string url)
