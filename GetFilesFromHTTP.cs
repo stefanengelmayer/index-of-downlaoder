@@ -15,15 +15,18 @@ namespace Downloader
         private Downloader downloader;
         private HttpWebResponse response;
         private StreamReader reader;
-
+        
         //für die Stats während des Downloads 
         private int top;
-        string statusstring; 
+        static string statusstring; 
 
         // async download variablen
         bool completed = false;
-        long length;
-        long speed;
+        long length=0;
+        long speed=0;
+        long dl_total;
+        long dl_aktuell;
+        int dl_progress;
         string pathToCheck = String.Empty;
         Stopwatch sw = new Stopwatch();
 
@@ -205,6 +208,7 @@ namespace Downloader
                     Funktionen.Lösche_Zeile();              
                     Funktionen.Lösche_Zeile();      
                     Console.SetCursorPosition(0, top);
+                    aktueller_speed(pathToCheck, length, speed, sw, dl_total, dl_aktuell, dl_progress);
                     Console.WriteLine(statusstring);
 
                 }
@@ -222,67 +226,10 @@ namespace Downloader
 
         void myWebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            FileInfo info = new FileInfo(pathToCheck.Replace("%20", " "));
-            length = info.Length;
-            try
-            {
-                speed = length / (sw.ElapsedMilliseconds / 1000);
-            }
-            catch (DivideByZeroException)
-            {
-                speed = 0;
-            }
-
-            string einheit = "Byte/s";
-
-            if (speed > 1024)
-            {
-                speed = speed / 1024;
-                einheit = "KByte/s";
-            }
-            
-            long total = e.TotalBytesToReceive;
-            string totalbyte = "Bytes";
-            if (total > 1024)
-            {
-                total = total / 1024;
-                totalbyte = "KBytes";
-
-                if (total > 1024)
-                {
-                    total = total / 1024;
-                    totalbyte = "MBytes";
-
-                    if (total > 1024)
-                    {
-                        total = total / 1024;
-                        totalbyte = "GBytes";
-                    }
-                }
-            }
-
-            long aktuell = e.BytesReceived;
-            string aktuellEinheit = "Bytes";
-
-            if (aktuell > 1024)
-            {
-                aktuell = aktuell / 1024;
-                aktuellEinheit = "KBytes";
-
-                if (aktuell > 1024)
-                {
-                    aktuell = aktuell / 1024;
-                    aktuellEinheit = "MBytes";
-
-                    if (aktuell > 1024)
-                    {
-                        aktuell = aktuell / 1024;
-                        aktuellEinheit = "GBytes";
-                    }
-                }
-            }
-            int progress = e.ProgressPercentage;
-            statusstring = "[ " + progress +"% ] File Size: " + total + " " + totalbyte + " received: " + aktuell + " " + aktuellEinheit + " Speed: "+ speed + einheit; 
+            dl_total = e.TotalBytesToReceive;
+            dl_aktuell = e.BytesReceived;
+            dl_progress = e.ProgressPercentage;
+           //moved: aktueller_speed()
         }
 
         void myWebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -302,5 +249,72 @@ namespace Downloader
         {
             return "\\\"([^\"]*)\\\"";
         }
+
+        private static void aktueller_speed(string pathToCheck, long length, long speed, Stopwatch sw, long totalbytes, long aktuellbytes, int progress)
+        {
+            FileInfo info = new FileInfo(pathToCheck.Replace("%20", " "));
+            length = info.Length;
+            try
+            {
+                speed = length / (sw.ElapsedMilliseconds / 1000);
+            }
+            catch (DivideByZeroException)
+            {
+                speed = 0;
+            }
+
+            string einheit = "Byte/s";
+
+            if (speed > 1024)
+            {
+                speed = speed / 1024;
+                einheit = "KByte/s";
+            }
+
+            long total = totalbytes;
+            string totalbyte = "Bytes";
+            if (total > 1024)
+            {
+                total = total / 1024;
+                totalbyte = "KBytes";
+
+                if (total > 1024)
+                {
+                    total = total / 1024;
+                    totalbyte = "MBytes";
+
+                    if (total > 1024)
+                    {
+                        total = total / 1024;
+                        totalbyte = "GBytes";
+                    }
+                }
+            }
+
+            long aktuell =aktuellbytes;
+            string aktuellEinheit = "Bytes";
+
+            if (aktuell > 1024)
+            {
+                aktuell = aktuell / 1024;
+                aktuellEinheit = "KBytes";
+
+                if (aktuell > 1024)
+                {
+                    aktuell = aktuell / 1024;
+                    aktuellEinheit = "MBytes";
+
+                    if (aktuell > 1024)
+                    {
+                        aktuell = aktuell / 1024;
+                        aktuellEinheit = "GBytes";
+                    }
+                }
+            }
+            
+            statusstring = "[ " + progress + "% ] File Size: " + total + " " + totalbyte + " received: " + aktuell + " " + aktuellEinheit + " Speed: " + speed + einheit;
+        }
+
     }
+ 
 }
