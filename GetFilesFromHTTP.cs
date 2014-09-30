@@ -22,8 +22,9 @@ namespace Downloader
 
         // async download variablen
         bool completed = false;
-        long length=0;
-        long speed=0;
+        static double length=0;
+        static double length_old = 0;
+        double speed=0;
         long dl_total;
         long dl_aktuell;
         int dl_progress;
@@ -203,13 +204,16 @@ namespace Downloader
                 while (!completed)
                 {
                     if (Console.CursorTop + 10 > Console.BufferHeight) Funktionen.Buffer_höhe_erhöhen(200);
-                    Thread.Sleep(200);
-                    Console.SetCursorPosition(0, top);                   
-                    Funktionen.Lösche_Zeile();              
-                    Funktionen.Lösche_Zeile();      
-                    Console.SetCursorPosition(0, top);
-                    aktueller_speed(pathToCheck, length, speed, sw, dl_total, dl_aktuell, dl_progress);
-                    Console.WriteLine(statusstring);
+                   
+                        Thread.Sleep(200);
+                        Console.SetCursorPosition(0, top);                   
+                        Funktionen.Lösche_Zeile();              
+                        Funktionen.Lösche_Zeile();      
+                        Console.SetCursorPosition(0, top);
+                       
+                        aktueller_speed(pathToCheck, speed, sw, dl_total, dl_aktuell, dl_progress);
+                        Console.WriteLine(statusstring);
+                    
 
                 }
 
@@ -250,13 +254,14 @@ namespace Downloader
             return "\\\"([^\"]*)\\\"";
         }
 
-        private static void aktueller_speed(string pathToCheck, long length, long speed, Stopwatch sw, long totalbytes, long aktuellbytes, int progress)
+        private static void aktueller_speed(string pathToCheck, double speed, Stopwatch sw, long totalbytes, long aktuellbytes, int progress)
         {
             FileInfo info = new FileInfo(pathToCheck.Replace("%20", " "));
             length = info.Length;
             try
             {
-                speed = length / (sw.ElapsedMilliseconds / 1000);
+                    speed = (length-length_old)/0.2;
+                       
             }
             catch (DivideByZeroException)
             {
@@ -272,19 +277,23 @@ namespace Downloader
             }
 
             long total = totalbytes;
+            int totalrest=0;
             string totalbyte = "Bytes";
             if (total > 1024)
             {
+                totalrest = (int)total % 1024;
                 total = total / 1024;
                 totalbyte = "KBytes";
 
                 if (total > 1024)
                 {
+                    totalrest = (int)total % 1024;
                     total = total / 1024;
                     totalbyte = "MBytes";
 
                     if (total > 1024)
                     {
+                        totalrest = (int)total % 1024;                       
                         total = total / 1024;
                         totalbyte = "GBytes";
                     }
@@ -292,27 +301,33 @@ namespace Downloader
             }
 
             long aktuell =aktuellbytes;
+            int aktuellrest=0;
             string aktuellEinheit = "Bytes";
 
             if (aktuell > 1024)
             {
+                aktuellrest = (int)aktuell % 1024;
                 aktuell = aktuell / 1024;
                 aktuellEinheit = "KBytes";
 
                 if (aktuell > 1024)
                 {
+                    aktuellrest = (int)aktuell % 1024;
                     aktuell = aktuell / 1024;
                     aktuellEinheit = "MBytes";
 
                     if (aktuell > 1024)
                     {
+                        aktuellrest = (int)aktuell % 1024;  
                         aktuell = aktuell / 1024;
                         aktuellEinheit = "GBytes";
                     }
                 }
             }
-            
-            statusstring = "[ " + progress + "% ] File Size: " + total + " " + totalbyte + " received: " + aktuell + " " + aktuellEinheit + " Speed: " + speed + einheit;
+            int speedint = (int)speed;
+
+            length_old = length;
+            statusstring = "[ " + progress + "% ] File Size: " + total + ","+ totalrest +" " + totalbyte + " received: " + aktuell + "." + aktuellrest+ " "  + aktuellEinheit + " Speed: " + speedint + einheit;
         }
 
     }
