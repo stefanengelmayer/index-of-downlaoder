@@ -11,7 +11,7 @@ using System.Threading;
 namespace Downloader
 {
     class Program
-    {
+    { 
         // Quick-Edit-Modus aktivieren
         [DllImport("kernel32.dll")]
         static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
