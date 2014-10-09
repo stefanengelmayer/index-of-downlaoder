@@ -84,8 +84,8 @@ namespace Downloader
                                 }
 
                                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                                Console.WriteLine("Gehe in Ordner " + tmp.Replace("%20", " "));
-                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine("Gehe in Ordner " + tmp.Replace("%20", " "));                              
+                                Console.ForegroundColor = ConsoleColor.White;                               
                                 HoleDateien(url, DIR + tmp, tmp);
                                 dir = false;
 
@@ -121,7 +121,10 @@ namespace Downloader
                             {
                                 tmp = Regex.Replace(tmp, "\"", string.Empty);
                                 tmp = tmp.Replace("amp;", string.Empty);
-                                Console.WriteLine(LadeDatei(url, tmp, DIR, offlinepfad));
+                                if (tmp.Contains("."))
+                                {
+                                    Console.WriteLine(LadeDatei(url, tmp, DIR, offlinepfad));
+                                }
                                 Console.ForegroundColor = ConsoleColor.White;
                             }
                         }
