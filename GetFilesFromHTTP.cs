@@ -27,7 +27,7 @@ namespace Downloader
         double speed=0;
         static int [] speed_durchschnitt = new int [5];
         static bool durchschnitt_verfügbar = false;
-        static int speed_anzeige;
+        
         long dl_total;
         long dl_aktuell;
         int dl_progress;
@@ -346,7 +346,7 @@ namespace Downloader
         {
             for (int i = 0; i < speed_durchschnitt.Length; i++)
             {
-                if(speed_durchschnitt[i]==null) //Falls noch keine 5 Downloadspeeds erfasst wurden
+                if(speed_durchschnitt[i]==0) //Falls noch keine 5 Downloadspeeds erfasst wurden
                 {
                     speed_durchschnitt[i] = speedint;
                     break; //spring heraus
