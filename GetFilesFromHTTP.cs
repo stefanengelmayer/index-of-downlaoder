@@ -25,6 +25,9 @@ namespace Downloader
         static double length=0;
         static double length_old = 0;
         double speed=0;
+        static int [] speed_durchschnitt = new int [5];
+        static bool durchschnitt_verfügbar = false;
+        static int speed_anzeige;
         long dl_total;
         long dl_aktuell;
         int dl_progress;
@@ -215,6 +218,7 @@ namespace Downloader
                         Console.SetCursorPosition(0, top);
                        
                         aktueller_speed(pathToCheck, speed, sw, dl_total, dl_aktuell, dl_progress);
+                        
                         Console.WriteLine(statusstring);
                     
 
@@ -303,7 +307,7 @@ namespace Downloader
                 }
             }
 
-            long aktuell =aktuellbytes;
+            long aktuell = aktuellbytes;
             int aktuellrest=0;
             string aktuellEinheit = "Bytes";
 
@@ -328,10 +332,63 @@ namespace Downloader
                 }
             }
             int speedint = (int)speed;
-
+            int speed_ds = durchschnitt_speed(speedint);
+            if (speed_ds != 0)
+            {
+                speedint = speed_ds;
+            }
             length_old = length;
             statusstring = "[ " + progress + "% ] File Size: " + total + ","+ totalrest +" " + totalbyte + " received: " + aktuell + "." + aktuellrest+ " "  + aktuellEinheit + " Speed: " + speedint + einheit;
         }
+
+
+        public static int durchschnitt_speed(int speedint)
+        {
+            for (int i = 0; i < speed_durchschnitt.Length; i++)
+            {
+                if(speed_durchschnitt[i]==null) //Falls noch keine 5 Downloadspeeds erfasst wurden
+                {
+                    speed_durchschnitt[i] = speedint;
+                    break; //spring heraus
+                }
+                else  //läuft im normalfalle durch
+                {
+                    durchschnitt_verfügbar=true;
+                    if(i == speed_durchschnitt.Length-1) //wenn Array voll ist. 
+                    {
+                        for (int j = 0; j < speed_durchschnitt.Length; j++)
+			            {
+
+                            speed_durchschnitt[i]=speed_durchschnitt[i+1];   //Alle eins vorziehen im Array
+                            if(j== speed_durchschnitt.Length-1)
+                            {
+                                speed_durchschnitt[j]=speedint;  
+                                continue;
+                            }
+			                  
+			            }
+                    }
+                }
+                
+            }
+
+            if(durchschnitt_verfügbar)
+            {
+               int speed =0;
+
+                for (int i = 0; i < speed_durchschnitt.Length; i++)
+                {
+                    speed = speed + speed_durchschnitt[i];
+                }
+
+                return speed / 5;
+
+            }
+            return 0;
+
+        }
+
+
 
     }
  
