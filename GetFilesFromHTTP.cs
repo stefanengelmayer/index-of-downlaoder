@@ -25,7 +25,7 @@ namespace Downloader
         static double length=0;
         static double length_old = 0;
         double speed=0;
-        static int [] speed_durchschnitt = new int [5];
+        static int[] speed_durchschnitt = new int[5] { 0, 0, 0, 0, 0 };
         static bool durchschnitt_verfügbar = false;
         
         long dl_total;
@@ -332,11 +332,11 @@ namespace Downloader
                 }
             }
             int speedint = (int)speed;
-            int speed_ds = durchschnitt_speed(speedint);
-            if (speed_ds != 0)
-            {
-                speedint = speed_ds;
-            }
+           // int speed_ds = durchschnitt_speed(speedint);
+          //  if (speed_ds != 0)
+           // {
+           //     speedint = speed_ds;
+            //}
             length_old = length;
             statusstring = "[ " + progress + "% ] File Size: " + total + ","+ totalrest +" " + totalbyte + " received: " + aktuell + "." + aktuellrest+ " "  + aktuellEinheit + " Speed: " + speedint + einheit;
         }
@@ -356,11 +356,11 @@ namespace Downloader
                     durchschnitt_verfügbar=true;
                     if(i == speed_durchschnitt.Length-1) //wenn Array voll ist. 
                     {
-                        for (int j = 0; j < speed_durchschnitt.Length; j++)
+                        for (int j = 0; j < speed_durchschnitt.Length-1; j++)
 			            {
 
-                            speed_durchschnitt[i]=speed_durchschnitt[i+1];   //Alle eins vorziehen im Array
-                            if(j== speed_durchschnitt.Length-1)
+                            speed_durchschnitt[j]=speed_durchschnitt[j+1];   //Alle eins vorziehen im Array
+                            if(j== (speed_durchschnitt.Length-1))
                             {
                                 speed_durchschnitt[j]=speedint;  
                                 continue;
@@ -381,7 +381,7 @@ namespace Downloader
                     speed = speed + speed_durchschnitt[i];
                 }
 
-                return speed / 5;
+                return (speed / 5);
 
             }
             return 0;
