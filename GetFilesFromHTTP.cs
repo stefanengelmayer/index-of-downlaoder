@@ -356,15 +356,16 @@ namespace Downloader
                     durchschnitt_verfügbar=true;
                     if(i == speed_durchschnitt.Length-1) //wenn Array voll ist. 
                     {
-                        for (int j = 0; j < speed_durchschnitt.Length-1; j++)
+                        for (int j = 0; j < speed_durchschnitt.Length; j++)
 			            {
 
-                            speed_durchschnitt[j]=speed_durchschnitt[j+1];   //Alle eins vorziehen im Array
+                            
                             if(j== (speed_durchschnitt.Length-1))
                             {
-                                speed_durchschnitt[j]=speedint;  
-                                
+                                speed_durchschnitt[j]=speedint;
+                                continue;
                             }
+                            speed_durchschnitt[j] = speed_durchschnitt[j + 1];   //Alle eins vorziehen im Array
 			                  
 			            }
                     }
