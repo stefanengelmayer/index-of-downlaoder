@@ -332,11 +332,11 @@ namespace Downloader
                 }
             }
             int speedint = (int)speed;
-           // int speed_ds = durchschnitt_speed(speedint);
-          //  if (speed_ds != 0)
-           // {
-           //     speedint = speed_ds;
-            //}
+            int speed_ds = durchschnitt_speed(speedint);
+            if (speed_ds != 0)
+            {
+                speedint = speed_ds;
+            }
             length_old = length;
             statusstring = "[ " + progress + "% ] File Size: " + total + ","+ totalrest +" " + totalbyte + " received: " + aktuell + "." + aktuellrest+ " "  + aktuellEinheit + " Speed: " + speedint + einheit;
         }
