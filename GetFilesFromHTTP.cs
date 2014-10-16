@@ -363,7 +363,7 @@ namespace Downloader
                             if(j== (speed_durchschnitt.Length-1))
                             {
                                 speed_durchschnitt[j]=speedint;  
-                                continue;
+                                
                             }
 			                  
 			            }
