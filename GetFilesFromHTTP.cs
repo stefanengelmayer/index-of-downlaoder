@@ -349,7 +349,7 @@ namespace Downloader
                 if(speed_durchschnitt[i]==0) //Falls noch keine 5 Downloadspeeds erfasst wurden
                 {
                     speed_durchschnitt[i] = speedint;
-                    break; //spring heraus
+                    continue;
                 }
                 else  //läuft im normalfalle durch
                 {
