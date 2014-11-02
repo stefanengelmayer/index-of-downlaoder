@@ -17,7 +17,7 @@ namespace Downloader
         private StreamReader reader;
         
         //für die Stats während des Downloads 
-        private int top;
+        private static int top;
         static string statusstring; 
 
         // async download variablen
@@ -243,7 +243,7 @@ namespace Downloader
            //moved: aktueller_speed()
         }
 
-        void myWebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        public void myWebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             completed = true;
             sw.Stop();
@@ -253,7 +253,12 @@ namespace Downloader
             Funktionen.Lösche_Zeile();
             Funktionen.Lösche_Zeile();
             Console.SetCursorPosition(1, top);
-            Console.WriteLine("[ 100% ] Download Complete!"); // hier besser aufgehoben da es ein Callback ist
+            Console.WriteLine("[ 100% ] Download Complete!"); // hier besser aufgehoben da es ein Callback ist  ... funzt aber nicht. soweit kommt es gar nicht :P 
+            for (int i = 0; i < speed_durchschnitt.Length-1; i++)
+            {
+                speed_durchschnitt[i] = 0;
+            }
+            
         }
 
         public string GetDirectoryListingRegexForUrl(string url)
