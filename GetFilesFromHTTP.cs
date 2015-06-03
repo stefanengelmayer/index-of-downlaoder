@@ -28,6 +28,7 @@ namespace Downloader
         static int[] speed_durchschnitt = new int[5] { 0, 0, 0, 0, 0 };
         static bool durchschnitt_verfügbar = false;
         private string save_path;
+        private string complete_path;
 
         
         long dl_total;
@@ -204,7 +205,8 @@ namespace Downloader
             {
                 completed = false;
                 sw.Start();
-                myWebClient.DownloadFileAsync(new Uri(myStringWebResource), save_path + datei);
+                complete_path = save_path + datei;
+                myWebClient.DownloadFileAsync(new Uri(myStringWebResource), complete_path);
                 Console.WriteLine("File: {0}", pathToCheck.Replace("%20", " "));
                 top = Console.CursorTop;
                 Console.CursorVisible = false;
@@ -403,7 +405,7 @@ namespace Downloader
         public String get_save_path()
         {
             
-            return save_path;
+            return complete_path;
         }
 
 
