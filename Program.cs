@@ -11,8 +11,10 @@ using System.Threading;
 namespace Downloader
 {
     class Program
-    { 
+    {
+        private static Downloader dl;
         // Quick-Edit-Modus aktivieren
+        #region QuickEdit
         [DllImport("kernel32.dll")]
         static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
 
@@ -22,8 +24,12 @@ namespace Downloader
         [DllImport("kernel32.dll")]
         static extern IntPtr GetStdHandle(int handle);
 
+
+
         const int STD_INPUT_HANDLE = -10;
         const int ENABLE_QUICK_EDIT_MODE = 0x40 | 0x80;
+        #endregion
+
 
         public static void EnableQuickEditMode()
         {
@@ -36,8 +42,12 @@ namespace Downloader
 
         static void Main(string[] args)
         {
+           
             EnableQuickEditMode();
-            new Downloader();
+            dl = new Downloader();
+            
         }
+
+
     }
 }

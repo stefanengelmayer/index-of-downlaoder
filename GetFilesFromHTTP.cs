@@ -21,12 +21,14 @@ namespace Downloader
         static string statusstring; 
 
         // async download variablen
-        bool completed = false;
+        private bool completed = false;
         static double length=0;
         static double length_old = 0;
         double speed=0;
         static int[] speed_durchschnitt = new int[5] { 0, 0, 0, 0, 0 };
         static bool durchschnitt_verfügbar = false;
+        private string save_path;
+
         
         long dl_total;
         long dl_aktuell;
@@ -172,7 +174,7 @@ namespace Downloader
             pfad = pfad.Replace("%20", " ");
             offlinepfad = offlinepfad.Replace("/", @"\");
 
-            string save_path = downloader.GetSpeicherpfad() + offlinepfad;
+            save_path = downloader.GetSpeicherpfad() + offlinepfad;
             save_path = save_path.Replace("%20", " ");
 
             if (!Directory.Exists(save_path))
@@ -392,6 +394,16 @@ namespace Downloader
             }
             return 0;
 
+        }
+
+        public Boolean get_completed()
+        {
+            return completed;
+        }
+        public String get_save_path()
+        {
+            
+            return save_path;
         }
 
 

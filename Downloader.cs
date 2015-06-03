@@ -10,7 +10,7 @@ namespace Downloader
     {
         // Programm Variablen
         private Config config = new Config(ConfigType.DownloadConfig); //initiale Config kann zur Laufzeit geändert werden für andere werte
-
+        private GetFilesFromHTTP http;
 
         // Download Variablen
         private string pfad = "";
@@ -18,6 +18,7 @@ namespace Downloader
         private string Ordner = null;
         private string Speicherpfad = null;
         private string Speicherpfad_neu = null;
+
 
         public Downloader()
         {
@@ -63,7 +64,7 @@ namespace Downloader
 
             string dir = "";
 
-            GetFilesFromHTTP http = new GetFilesFromHTTP(this);
+            http = new GetFilesFromHTTP(this);
             http.HoleDateien(url, dir, "");
         }
 
@@ -90,6 +91,14 @@ namespace Downloader
         public Config GetConfig()
         {
             return config;
+        }
+        public Boolean getCompleted()
+        {
+            return http.get_completed();
+        }
+        public String get_save_path()
+        {
+            return http.get_save_path();
         }
     }
 }
