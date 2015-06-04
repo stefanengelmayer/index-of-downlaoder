@@ -261,7 +261,6 @@ namespace Downloader
         {
             if(Program.cancel)
             {
-               
                 return;
             }
             completed = true;

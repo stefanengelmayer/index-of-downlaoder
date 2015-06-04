@@ -42,6 +42,13 @@ namespace Downloader
             SetConsoleMode(handle, mode);
         }
 
+
+        [DllImport("Kernel32")]
+        private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
+
+        private delegate bool EventHandler(CtrlType sig);
+        static EventHandler _handler;
+
         enum CtrlType
         {
             CTRL_C_EVENT = 0,
@@ -51,62 +58,62 @@ namespace Downloader
             CTRL_SHUTDOWN_EVENT = 6
         }
 
-        private delegate bool EventHandler(CtrlType sig);
 
-        // Sample Console CTRL handler
         private static bool Handler(CtrlType sig)
         {
-            bool handled = false;
             switch (sig)
             {
                 case CtrlType.CTRL_C_EVENT:
                 case CtrlType.CTRL_LOGOFF_EVENT:
                 case CtrlType.CTRL_SHUTDOWN_EVENT:
                 case CtrlType.CTRL_CLOSE_EVENT:
-                    {
-                        if (File.Exists(dlpfad))
-                        {                          
-                            cancel = true;
-                            myWebClient.Dispose();
-                            myWebClient.CancelAsync();                 
-                            while(File.Exists(dlpfad))
-                            {
-                                try
-                                {
-                                    File.Delete(dlpfad);
-                                }            
-                                catch (Exception e)  // dauert eine Weile, bis die File freigegeben wird.
-                                {
- 
-                                }
-                            }
 
+                    if (File.Exists(dlpfad))
+                    {
+                        cancel = true;
+                        myWebClient.Dispose();
+                        myWebClient.CancelAsync();
+                        while (File.Exists(dlpfad))
+                        {
+                            try
+                            {
+                                File.Delete(dlpfad);
+                            }
+                            catch (Exception e)  // dauert eine Weile, bis die File freigegeben wird.
+                            {
+
+                            }
                         }
+
+                    }
+
+                    return false;
+                default:
+                    return true;
+            }
+        }
+  
+       
+
                             
                     
-                    }
+                    
                     // return false if you want the process to exit.
                     // returning true, causes the system to display a dialog
                     // giving the user the choice to terminate or continue
                     
                     
-                    break;
-                default:
-                    return handled;
-            }
-            return handled;
-        }
+           
 
-        [DllImport("Kernel32")]
-        private static extern bool SetConsoleCtrlHandler(EventHandler handler,
-        bool add);
+      
 
   
 
         static void Main(string[] args)
         {
-          
-            SetConsoleCtrlHandler(new EventHandler(Handler), true);
+            _handler += new EventHandler(Handler);
+            SetConsoleCtrlHandler(_handler, true);
+    
             EnableQuickEditMode();
             dl = new Downloader();
          
