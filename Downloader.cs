@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 
@@ -18,7 +19,7 @@ namespace Downloader
         private string Ordner = null;
         private string Speicherpfad = null;
         private string Speicherpfad_neu = null;
-
+        
 
         public Downloader()
         {
@@ -88,17 +89,11 @@ namespace Downloader
             Run();
         }
 
+
         public Config GetConfig()
         {
             return config;
         }
-        public Boolean getCompleted()
-        {
-            return http.get_completed();
-        }
-        public String get_save_path()
-        {
-            return http.get_save_path();
-        }
+
     }
 }

@@ -29,7 +29,8 @@ namespace Downloader
         static bool durchschnitt_verfügbar = false;
         private string save_path;
         private string complete_path;
-
+        
+        
         
         long dl_total;
         long dl_aktuell;
@@ -44,6 +45,7 @@ namespace Downloader
 
         public void HoleDateien(string url, string DIR, string letzterzusatz)
         {
+           
             string offlinepfad = DIR;
             Boolean ersterOrdner = true;
             HttpWebRequest request = null;
@@ -129,7 +131,11 @@ namespace Downloader
                                 tmp = tmp.Replace("amp;", string.Empty);
                                 if (tmp.Contains("."))
                                 {
-                                    Console.WriteLine(LadeDatei(url, tmp, DIR, offlinepfad));
+                                    if (!Program.cancel)
+                                    {
+
+                                        Console.WriteLine(LadeDatei(url, tmp, DIR, offlinepfad));
+                                    }
                                 }
                                 Console.ForegroundColor = ConsoleColor.White;
                             }
@@ -183,11 +189,13 @@ namespace Downloader
                 Directory.CreateDirectory(save_path);
             }
 
-            WebClient myWebClient = new WebClient();
-            myWebClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(myWebClient_DownloadFileCompleted);
-            myWebClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(myWebClient_DownloadProgressChanged);
+            Program.myWebClient = new WebClient();
+            Program.myWebClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(myWebClient_DownloadFileCompleted);
+            Program.myWebClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(myWebClient_DownloadProgressChanged);
+            
             // to check for the file in the callback handler
             pathToCheck = save_path + datei;
+            
 
             if (File.Exists(save_path + datei.Replace("%20", " "))) 
             { 
@@ -206,7 +214,9 @@ namespace Downloader
                 completed = false;
                 sw.Start();
                 complete_path = save_path + datei;
-                myWebClient.DownloadFileAsync(new Uri(myStringWebResource), complete_path);
+                Program.myWebClient.DownloadFileAsync(new Uri(myStringWebResource), complete_path);
+                
+                Program.dlpfad = complete_path;   // für Main - falls Programm geschlossen wird.
                 Console.WriteLine("File: {0}", pathToCheck.Replace("%20", " "));
                 top = Console.CursorTop;
                 Console.CursorVisible = false;
@@ -249,7 +259,13 @@ namespace Downloader
 
         public void myWebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
+            if(Program.cancel)
+            {
+               
+                return;
+            }
             completed = true;
+            Program.dlpfad = "";
             sw.Stop();
             sw.Reset();
             Console.SetCursorPosition(1, top);
@@ -396,16 +412,6 @@ namespace Downloader
             }
             return 0;
 
-        }
-
-        public Boolean get_completed()
-        {
-            return completed;
-        }
-        public String get_save_path()
-        {
-            
-            return complete_path;
         }
 
 
