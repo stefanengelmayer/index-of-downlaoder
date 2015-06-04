@@ -30,7 +30,6 @@ namespace Downloader
         const int ENABLE_QUICK_EDIT_MODE = 0x40 | 0x80;
         #endregion
 
-
         public static void EnableQuickEditMode()
         {
             int mode;
@@ -40,13 +39,43 @@ namespace Downloader
             SetConsoleMode(handle, mode);
         }
 
+        static bool ConsoleEventCallback(int eventType)
+        {
+            switch(eventType)
+            {
+                case 0:
+                case 2:
+                case 5:
+                case 6:
+                    {
+                    //    Console.WriteLine("Console window closing, death imminent");
+                        if (!dl.getCompleted()) if (File.Exists(dl.get_save_path())) File.Delete(dl.get_save_path());
+                        break;
+                    }
+                default:
+                break;
+            }
+            return false;
+        }
+        static ConsoleEventDelegate handler;   // Keeps it from getting garbage collected
+        // Pinvoke
+        private delegate bool ConsoleEventDelegate(int eventType);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
+
+
+  
+
         static void Main(string[] args)
         {
-           
+            handler = new ConsoleEventDelegate(ConsoleEventCallback);
+            SetConsoleCtrlHandler(handler, true);
             EnableQuickEditMode();
             dl = new Downloader();
-            
+         
+
         }
+
 
 
     }
